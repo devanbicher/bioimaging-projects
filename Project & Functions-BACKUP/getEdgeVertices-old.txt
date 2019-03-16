@@ -1,0 +1,95 @@
+%{
+    function getEdgeVertices
+        
+        xverts = [];
+        yverts = [];
+        zverts = [];
+        top = [];
+        right = [];
+        left = [];
+        bottom = [];
+        topRow = [];
+        rightRow = [];
+        leftRow = [];
+        bottomRow = [];
+
+       % the third dimension coordinate is based on the number in the series and the %slice thickness
+       for w =1: newWidth
+            for i = 1:dirSize
+                slc = edgedSlices(:,:,i);
+                z = 3*thickness*i;
+                row = transpose(slc(:,w));
+                 % if the row is all black continue
+                if size(find(row),2) == 0 || size(find(row),2) == 1
+                   %this means there are now non-zero items in here
+                   continue;
+                end
+                y1 = find(row,1,'first');
+                y2 = find(row,1,'last');
+                topRow = [topRow;w,y1,z];
+                bottomRow = [bottomRow;w,y2,z];
+            end
+            if mod(w,2)
+                topRow = wrev(topRow);
+                bottomRow = wrev(bottomRow);
+            end 
+            top = [top;topRow];
+            bottom = [bottom;bottomRow];
+            topRow = [];
+            bottomRow = [];
+       end
+
+       for h = 1: newHeight
+           for i = 1:dirSize
+                slc = edgedSlices(:,:,i);
+                z = 3*thickness*i;
+               row = slc(h,:);
+               % if the row is all black continue
+               if size(find(row),2) == 0 || size(find(row),2) == 1
+                   %this means there are now non-zero items in here
+                   continue;
+               end
+                x1 = find(row,1,'first');
+                x2 = find(row,1,'last');
+                leftRow = [leftRow;x1,h,z];
+                rightRow = [rightRow;x2,h,z];
+            end
+            if mod(h,2)
+                leftRow = wrev(leftRow);
+                rightRow = wrev(rightRow);
+            end 
+            left = [left;leftRow];
+            right = [right;rightRow];
+            leftRow = [];
+            rightRow = [];
+           
+        end
+        
+        xverts = [top(:,1);right(:,1);wrev(bottom(:,1));wrev(left(:,1))];
+        yverts = [top(:,2);right(:,2);wrev(bottom(:,2));wrev(left(:,2))];
+        zverts = [top(:,3);right(:,3);wrev(bottom(:,3));wrev(left(:,3))];
+        
+    end
+    %}
+    %{
+	function assemblePatches
+		
+		disp('Here goes nothing!');
+        
+        plot3(xverts,yverts,zverts);
+        dispSlices = 0;
+        globalNext = 0;
+        while globalNext == 0
+                pause(1);
+        end
+        globalNext = 0;
+        
+        
+        
+        p = patch(xverts,yverts,zverts);
+        camlight;
+        view(3);
+        lighting phong;
+        
+	end
+  %}

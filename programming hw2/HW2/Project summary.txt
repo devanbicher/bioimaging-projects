@@ -1,0 +1,8 @@
+I chose to implement the K means clustering algorithm
+I have 2 options to run the segmentation, both segment based on color but one will segment by analyzing the l,a,b values of the 
+color image, the color option, the other option will convert the image to grayscale and run the segmentation on the intensity values 
+of the image.  The procedure works quite well and does a great job of segmenting by color as will be ovbious when running the program
+I tried it on numerous images and it always performs well. The images included are simple, like the test.png, and 
+complex like the neuron tiff images.  It still works well even on the noisy tiff images.
+If I had more time I would have liked to add a location layer to the clustering so that it clusers by color and by locality, this is something
+I am considering for the final project. 

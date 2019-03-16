@@ -1,0 +1,35 @@
+    %{
+    function selectEdgePoints
+		for i = 1:dirSize
+			
+			curSlice = i;
+			
+			im = clustSlices(:,:,curSlice);
+			%dispTitle = ['Im: ',names(curSlice,:),',  # ',num2str(curSlice),', Inst # ',num2str(sortInstNums(curSlice))];
+			dispTitle = ['Clustered Slice: ',names(curSlice,:),', # ',num2str(curSlice),', Inst # ',num2str(sortInstNums(curSlice))];
+			imshow(im,[]), title(dispTitle);
+			
+			p = ginput(2); 
+
+			% Get the x and y corner coordinates as integers
+			left = min(floor(p(1)), floor(p(2))); %xmin 
+			top = min(floor(p(3)), floor(p(4))); %ymin 
+			right = max(ceil(p(1)), ceil(p(2)));   %xmax 
+			bottom = max(ceil(p(3)), ceil(p(4)));   %ymax 
+            
+            
+            mask = false(size(im));
+            mask(top:bottom,left:right) = true;
+            
+            edges = activecontour(im, mask, 200, 'Chan-Vese');
+            
+            dispTitle = ['Edges of: ',names(curSlice,:),', # ',num2str(curSlice),', Inst # ',num2str(sortInstNums(curSlice))];
+			imshow(edges,[]), title(dispTitle);
+            pause(2);
+
+            edgedSlices = cat(3,edgedSlices, edges);
+		
+		end
+		edged = 1;
+    end
+    %}
